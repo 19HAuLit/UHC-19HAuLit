@@ -1,0 +1,21 @@
+world:
+  #True: La map uhc est regenere | False: La map uhc n'est pas regenere
+  gen_start: false
+  hub:
+    x: -0.5
+    y: 33
+    z: -18.5
+message:
+  prefix: "&5[&2UHC&3-&419hAuLit&5]&1 "
+uhc:
+  # Tout les temps suivants sont en secondes
+  map_size: 1500
+  final_map_size: 50
+  time_invincible: 30
+  time_final_heal: 1200
+  time_pvp: 1200
+  time_border: 3600
+  time_end_border: 4800
+scenario:
+  # True ou False
+  cutclean: true

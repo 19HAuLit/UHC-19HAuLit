@@ -1,0 +1,43 @@
+name: UHC-19hAuLit
+main: fr.gotta.uhc.Main
+version: 0.1
+description: Plugin de UHC by 19HAuLit
+commands:
+  hub:
+    description: Permet de revenir au hub du serveur
+    permission: player.use
+    aliases: [spawn, l, lobby]
+  alert:
+    description: Permet d'envoyer un message important
+    permission: admin.use
+    aliases: [bc, broadcast]
+  start:
+    description: Commande pour lancer l'uhc
+    permission: host.use
+  preview:
+    description: Commande pour regarder la map de l'uhc
+    permission: host.use
+  regenerate:
+    description: Commande pour regenerer le monde uhc
+    permission: host.use
+    aliases: regen
+  state:
+    description: Commande pour savoir on en est la game
+    permission: player.use
+  spectator:
+    description: Commande pour pouvoir spec l'uhc
+    permission: player.use
+    aliases: spec
+  revive:
+    description: Commande permettant de faire respawn un joueur
+    permission: host.use
+permissions:
+  admin.use:
+    description: Permissions admin
+    default: op
+  host.use:
+    description: Permissions host
+    default: op
+  player.use:
+    description: Permissions player
+    default: true
