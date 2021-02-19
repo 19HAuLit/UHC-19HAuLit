@@ -10,3 +10,4 @@ Listes des choses qui sont à faire:
 - Clear l'xp des joueurs lors de son spawn
 - Scénario HorseLess
 - Scénario SuperHeroes
+- Vie dans le Tab et au dessus du pseudo du joueur
