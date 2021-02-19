@@ -11,3 +11,4 @@ Listes des choses qui sont à faire:
 - Scénario HorseLess
 - Scénario SuperHeroes
 - Vie dans le Tab et au dessus du pseudo du joueur
+- Modifier le problème de message de mort alors que le joueur n'est pas mort
