@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -18,6 +19,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
+import java.util.stream.DoubleStream;
 
 
 public class listeners implements Listener
@@ -28,6 +32,8 @@ public class listeners implements Listener
     {
         this.main = main;
     }
+
+    private final Random rand = new Random();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
@@ -140,6 +146,17 @@ public class listeners implements Listener
                     main.checkWin();
                 }
             }
+            if (main.getConfigBool("scenario.fireless"))
+            {
+                if (event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK || event.getCause() == EntityDamageEvent.DamageCause.LAVA || event.getCause() == EntityDamageEvent.DamageCause.FIRE)
+                {
+                    event.setCancelled(true);
+                }
+            }
+            if (main.getConfigBool("scenario.nofall"))
+            {
+                if (event.getCause() == EntityDamageEvent.DamageCause.FALL) event.setCancelled(true);
+            }
         }
         return;
     }
@@ -163,7 +180,7 @@ public class listeners implements Listener
     }
 
     @EventHandler
-    public void onDrop(PlayerDropItemEvent event)
+    public void onPlayerDrop(PlayerDropItemEvent event)
     {
         Player player = event.getPlayer();
         World hub = Bukkit.getWorld("world");
@@ -176,12 +193,31 @@ public class listeners implements Listener
     }
 
     @EventHandler
+    public void onLeavesDrop(LeavesDecayEvent event)
+    {
+        Block block = event.getBlock();
+        Location location = block.getLocation();
+        if (main.getConfigBool("scenario.all_tree_drop"))
+        {
+            if (block.getType() == Material.LEAVES)
+            {
+                double rdmDrop = rand.nextDouble() * 100;
+                if (rdmDrop <= main.getConfigDouble("scenario.apple_rate"))
+                {
+                    ItemStack drop = new ItemStack(Material.APPLE);
+                    location.getWorld().dropItemNaturally(location, drop);
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void onBreak(BlockBreakEvent event)
     {
-        Player player = event.getPlayer();
         World hub = Bukkit.getWorld("world");
         Block block = event.getBlock();
         Location location = block.getLocation();
+        Player player = event.getPlayer();
         if (player.getGameMode() == GameMode.SURVIVAL)
         {
             if (player.getWorld() == hub || main.state == "teleportation")
@@ -189,7 +225,7 @@ public class listeners implements Listener
                 event.setCancelled(true);
                 player.sendMessage(main.prefix+"Vous ne pouvez pas casser ce block !");
             }
-            else if (main.getConfigBool("scenario.cutclean"))
+            if (main.getConfigBool("scenario.cutclean") && player.getWorld() != hub && main.state != "teleportation")
             {
                 if (block.getType() == Material.GOLD_ORE)
                 {
@@ -211,6 +247,18 @@ public class listeners implements Listener
                     ItemStack drop = new ItemStack(Material.FLINT);
                     location.getWorld().dropItemNaturally(location, drop);
                     block.setType(Material.AIR);
+                }
+            }
+            if (main.getConfigBool("scenario.all_tree_drop") && player.getWorld() != hub && main.state != "teleportation")
+            {
+                if (block.getType() == Material.LEAVES)
+                {
+                    double rdmDrop = rand.nextDouble() * 100;
+                    if (rdmDrop <= main.getConfigDouble("scenario.apple_rate"))
+                    {
+                        ItemStack drop = new ItemStack(Material.APPLE);
+                        location.getWorld().dropItemNaturally(location, drop);
+                    }
                 }
             }
         }

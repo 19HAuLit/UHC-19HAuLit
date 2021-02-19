@@ -19,3 +19,8 @@ uhc:
 scenario:
   # True ou False
   cutclean: true
+  fireless: true
+  nofall: false
+  all_tree_drop: true
+  # Mettre le pourcentage de change
+  apple_rate: 25
