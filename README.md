@@ -8,3 +8,5 @@ Listes des choses qui sont à faire:
 - Ajouter un scoreboard informatif de la game
 - Ajouter la commande /revive
 - Clear l'xp des joueurs lors de son spawn
+- Scénario HorseLess
+- Scénario SuperHeroes
