@@ -7,3 +7,4 @@ Listes des choses qui sont à faire:
 - Modifier le taux d'apparition de la Canne à Sucre
 - Ajouter un scoreboard informatif de la game
 - Ajouter la commande /revive
+- Clear l'xp des joueurs lors de son spawn
