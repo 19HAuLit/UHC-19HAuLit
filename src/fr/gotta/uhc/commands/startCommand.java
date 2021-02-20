@@ -167,6 +167,10 @@ public class startCommand implements CommandExecutor
                     Bukkit.broadcastMessage(main.prefix+"La border a fini de bouger !");
                     main.state = "end";
                 }
+                for(Player player : Bukkit.getOnlinePlayers())
+                {
+                    main.scoreBoard(player);
+                }
                 main.uhcTime++;
                 time++;
                 return;
