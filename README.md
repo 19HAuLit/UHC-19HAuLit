@@ -6,5 +6,6 @@ Listes des choses qui sont à faire:
 - Permettre à tout les arbres de pouvoir drop des Pommes et modifier leurs taux de drop
 - Ajouter le cutclean aux mobs
 - Modifier le taux d'apparition de la Canne à Sucre
-- Ajouter un scoreboard informatif de la game
 - Ajouter la commande /revive
+- Ajouter la commande /meetup
+- Ajouter la commande /arena
