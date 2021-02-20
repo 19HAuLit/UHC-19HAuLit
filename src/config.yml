@@ -10,7 +10,7 @@ message:
 uhc:
   # Tout les temps suivants sont en secondes
   map_size: 1500
-  final_map_size: 50
+  final_map_size: 100
   time_invincible: 30
   time_final_heal: 1200
   time_pvp: 1200
@@ -19,8 +19,10 @@ uhc:
 scenario:
   # True ou False
   cutclean: true
+  # Mettre un chiffre
+  xp_rate: 5
   fireless: true
   nofall: false
   all_tree_drop: true
   # Mettre le pourcentage de change
-  apple_rate: 25
+  apple_rate: 2

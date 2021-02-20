@@ -33,9 +33,11 @@ public class hubCommand implements CommandExecutor
             World hub = Bukkit.getWorld("world");
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
-            player.teleport(spawn);
-            player.getInventory().clear();
             player.getActivePotionEffects().clear();
+            player.teleport(spawn);
+            player.setExp(0);
+            player.setLevel(0);
+            player.getInventory().clear();
             player.sendMessage(main.prefix+"Bienvenue au spawn !");
         }
 

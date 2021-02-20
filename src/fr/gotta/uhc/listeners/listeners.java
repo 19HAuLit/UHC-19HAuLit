@@ -21,7 +21,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
-import java.util.stream.DoubleStream;
 
 
 public class listeners implements Listener
@@ -35,28 +34,41 @@ public class listeners implements Listener
 
     private final Random rand = new Random();
 
+    private String DeathMsg = null;
+
     @EventHandler
     public void onJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
+        World uhc = Bukkit.getWorld("uhc");
         event.setJoinMessage(main.prefix+player.getDisplayName()+" viens pour se battre !");
         if (main.state == "wait")
         {
             World hub = Bukkit.getWorld("world");
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
+            player.getActivePotionEffects().clear();
             player.teleport(spawn);
             player.getInventory().clear();
+            player.setSaturation(20);
+            player.setFoodLevel(20);
+            player.setHealth(20);
+            player.setExp(0);
+            player.setLevel(0);
+        }
+        else if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL)
+        {
+            main.playerLeft++;
         }
         else
-            {
-                Location uhc = new Location(Bukkit.getWorld("uhc"), 0, 200, 0);
-                player.setGameMode(GameMode.SPECTATOR);
-                player.teleport(uhc);
-            }
-        player.setSaturation(20);
-        player.setFoodLevel(20);
-        player.setHealth(20);
+        {
+            Location specUhc = new Location(uhc, 0, 200, 0);
+            player.setGameMode(GameMode.SPECTATOR);
+            player.teleport(specUhc);
+            player.setSaturation(20);
+            player.setFoodLevel(20);
+            player.setHealth(20);
+        }
         return;
     }
 
@@ -90,15 +102,7 @@ public class listeners implements Listener
                     damager.sendMessage(main.prefix+"Le PvP n'est pas activé !");
                     event.setCancelled(true);
                 }
-                else if (event.getDamage() >= player.getHealth())
-                {
-                    Bukkit.broadcastMessage(main.prefix + "§6" + player.getDisplayName() + "§7 viens de faire manger par §8"+ killer.getDisplayName());
-                    if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
-                    {
-                        main.playerLeft--;
-                        main.checkWin();
-                    }
-                }
+                DeathMsg = main.prefix + "§6" + player.getDisplayName() + "§7 vient de faire manger par §8"+ killer.getDisplayName();
             }
             else if (damager instanceof Projectile)
             {
@@ -113,12 +117,7 @@ public class listeners implements Listener
                     }
                     else if (event.getDamage() >= player.getHealth())
                         {
-                            Bukkit.broadcastMessage(main.prefix +"§6"+player.getDisplayName() + "§7 viens de faire manger par §8"+ shooter.getDisplayName());
-                            if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
-                            {
-                                main.playerLeft--;
-                                main.checkWin();
-                            }
+                            DeathMsg = main.prefix + "§6" + player.getDisplayName() + "§7 vient de faire manger par §8"+ shooter.getDisplayName();
                         }
                 }
             }
@@ -139,12 +138,7 @@ public class listeners implements Listener
             }
             else if (event.getDamage() >= player.getHealth() && event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK && event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE)
             {
-                Bukkit.broadcastMessage(main.prefix + "§6" + player.getDisplayName() + "§7 est encore mort PvE...");
-                if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
-                {
-                    main.playerLeft--;
-                    main.checkWin();
-                }
+                DeathMsg = main.prefix + "§6" + player.getDisplayName() + "§7 est encore mort §8PvE...";
             }
             if (main.getConfigBool("scenario.fireless"))
             {
@@ -164,11 +158,6 @@ public class listeners implements Listener
     @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
-        event.setDeathMessage(null);
-        event.getEntity().setGameMode(GameMode.SPECTATOR);
-        event.getEntity().setHealth(20);
-        event.getEntity().setFoodLevel(20);
-        event.getEntity().setSaturation(20);
         Player player = (Player) event.getEntity();
         World uhc = Bukkit.getWorld("uhc");
         if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
@@ -176,6 +165,11 @@ public class listeners implements Listener
             main.playerLeft--;
             main.checkWin();
         }
+        event.setDeathMessage(DeathMsg);
+        event.getEntity().setGameMode(GameMode.SPECTATOR);
+        event.getEntity().setHealth(20);
+        event.getEntity().setFoodLevel(20);
+        event.getEntity().setSaturation(20);
 
     }
 
@@ -230,23 +224,25 @@ public class listeners implements Listener
                 if (block.getType() == Material.GOLD_ORE)
                 {
                     event.setCancelled(true);
+                    block.setType(Material.AIR);
                     ItemStack drop = new ItemStack(Material.GOLD_INGOT);
                     location.getWorld().dropItemNaturally(location, drop);
-                    block.setType(Material.AIR);
+                    player.giveExp(main.getConfigInt("scenario.xp_rate"));
                 }
                 if (block.getType() == Material.IRON_ORE)
                 {
                     event.setCancelled(true);
+                    block.setType(Material.AIR);
                     ItemStack drop = new ItemStack(Material.IRON_INGOT);
                     location.getWorld().dropItemNaturally(location, drop);
-                    block.setType(Material.AIR);
+                    player.giveExp(main.getConfigInt("scenario.xp_rate"));
                 }
                 if (block.getType() == Material.GRAVEL)
                 {
                     event.setCancelled(true);
+                    block.setType(Material.AIR);
                     ItemStack drop = new ItemStack(Material.FLINT);
                     location.getWorld().dropItemNaturally(location, drop);
-                    block.setType(Material.AIR);
                 }
             }
             if (main.getConfigBool("scenario.all_tree_drop") && player.getWorld() != hub && main.state != "teleportation")
@@ -257,7 +253,8 @@ public class listeners implements Listener
                     if (rdmDrop <= main.getConfigDouble("scenario.apple_rate"))
                     {
                         ItemStack drop = new ItemStack(Material.APPLE);
-                        location.getWorld().dropItemNaturally(location, drop);
+                        block.getDrops().add(drop);
+                        //location.getWorld().dropItemNaturally(location, drop);
                     }
                 }
             }
