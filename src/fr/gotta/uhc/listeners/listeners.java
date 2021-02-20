@@ -40,6 +40,7 @@ public class listeners implements Listener
     public void onJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
+        main.scoreBoard(player);
         World uhc = Bukkit.getWorld("uhc");
         event.setJoinMessage(main.prefix+player.getDisplayName()+" viens pour se battre !");
         if (main.state == "wait")
