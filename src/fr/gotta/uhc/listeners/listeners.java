@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
@@ -163,14 +164,15 @@ public class listeners implements Listener
         World uhc = Bukkit.getWorld("uhc");
         if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
         {
+            event.setDeathMessage(null);
+            Bukkit.broadcastMessage(DeathMsg);
+            event.getEntity().setGameMode(GameMode.SPECTATOR);
+            event.getEntity().setHealth(20);
+            event.getEntity().setFoodLevel(20);
+            event.getEntity().setSaturation(20);
             main.playerLeft--;
             main.checkWin();
         }
-        event.setDeathMessage(DeathMsg);
-        event.getEntity().setGameMode(GameMode.SPECTATOR);
-        event.getEntity().setHealth(20);
-        event.getEntity().setFoodLevel(20);
-        event.getEntity().setSaturation(20);
 
     }
 
@@ -274,6 +276,12 @@ public class listeners implements Listener
             player.sendMessage(main.prefix+"Vous ne pouvez pas posser ce block !");
         }
         return;
+    }
+
+    @EventHandler
+    public void Server(ServerListPingEvent event)
+    {
+        event.setMotd(main.getConfigString("server.modt"));
     }
 
     @EventHandler

@@ -62,6 +62,7 @@ public class startCommand implements CommandExecutor
             player.setLevel(0);
             player.teleport(location);
             main.playerLeft++;
+            player.playSound(player.getLocation(), Sound.ZOMBIE_WOODBREAK, 10, 10);
         }
         // Invincible
         main.state = "invincible";
@@ -129,6 +130,10 @@ public class startCommand implements CommandExecutor
                 if (time == time_pvp)
                 {
                     Bukkit.broadcastMessage(main.prefix+"PvP activé !");
+                    for(Player player : Bukkit.getOnlinePlayers())
+                    {
+                        player.playSound(player.getLocation(), Sound.WITHER_DEATH, 10, 10);
+                    }
                     main.state = "pvp";
                 }
                 // PvP to Border
@@ -149,6 +154,10 @@ public class startCommand implements CommandExecutor
                     main.state = "border";
                     int time_to_moove = time_end_border - time_border;
                     uhc.getWorldBorder().setSize(main.getConfigInt("uhc.final_map_size"), time_to_moove);
+                    for(Player player : Bukkit.getOnlinePlayers())
+                    {
+                        player.playSound(player.getLocation(), Sound.CREEPER_HISS, 10, 10);
+                    }
                 }
                 // Border to End
                 if (time_end_border-time > 0)
@@ -165,6 +174,10 @@ public class startCommand implements CommandExecutor
                 if (time == time_end_border)
                 {
                     Bukkit.broadcastMessage(main.prefix+"La border a fini de bouger !");
+                    for(Player player : Bukkit.getOnlinePlayers())
+                    {
+                        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 10, 10);
+                    }
                     main.state = "end";
                 }
                 for(Player player : Bukkit.getOnlinePlayers())

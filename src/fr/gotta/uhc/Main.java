@@ -88,6 +88,10 @@ public class Main extends JavaPlugin
         if (playerLeft == 1)
         {
             Bukkit.broadcastMessage(prefix+"§9"+winner.getDisplayName()+"§a viens de win l'UHC, GG !!!");
+            for (Player player : Bukkit.getOnlinePlayers())
+            {
+                player.playSound(player.getLocation(), Sound.ENDERDRAGON_DEATH, 10, 10);
+            }
         }
     }
 
