@@ -1,6 +1,6 @@
 name: UHC-19hAuLit
 main: fr.gotta.uhc.Main
-version: 0.2
+version: 0.3
 description: Plugin de UHC by 19HAuLit
 commands:
   hub:
@@ -30,6 +30,9 @@ commands:
     aliases: spec
   revive:
     description: Commande permettant de faire respawn un joueur
+    permission: host.use
+  meetup:
+    description: Commande pour lance un Meetup
     permission: host.use
 permissions:
   admin.use:

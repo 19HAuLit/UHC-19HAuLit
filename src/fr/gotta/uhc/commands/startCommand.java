@@ -58,6 +58,8 @@ public class startCommand implements CommandExecutor
             player.setSaturation(20);
             player.setHealth(20);
             player.getActivePotionEffects().clear();
+            player.setExp(0);
+            player.setLevel(0);
             player.teleport(location);
             main.playerLeft++;
         }
