@@ -22,16 +22,28 @@ public class Main extends JavaPlugin
         if (hub.getPVP()) hub.setPVP(false);
         if (hub.getAnimalSpawnLimit() != 0) hub.setAnimalSpawnLimit(0);
         if (hub.getMonsterSpawnLimit() != 0) hub.setMonsterSpawnLimit(0);
-        // GENERATION DU MONDE UHC
+        // Load World
         if (getConfigBool("world.gen_start"))
         {
+            // Tp world
             Location spawn = new Location(hub, hub_x, hub_y, hub_z);
+            // Regen uhc
             World uhc = Bukkit.getWorld("uhc");
             unLoadWord(uhc, spawn);
-            File worldFile = new File(System.getProperty("user.dir") + "\\uhc");
-            fileDelete(worldFile);
+            File uhcFile = new File(System.getProperty("user.dir") + "\\uhc");
+            fileDelete(uhcFile);
+            // Regen uhc_nether
+            World uhc_nether = Bukkit.getWorld("uhc_nether");
+            unLoadWord(uhc_nether, spawn);
+            File uhc_netherFile = new File(System.getProperty("user.dir") + "\\uhc_nether");
+            fileDelete(uhc_netherFile);
         }
-        Bukkit.createWorld(WorldCreator.name("uhc"));
+        WorldCreator uhcWorld = new WorldCreator("uhc");
+        uhcWorld.environment(World.Environment.NORMAL);
+        uhcWorld.createWorld();
+        WorldCreator uhc_netherWorld = new WorldCreator("uhc_nether");
+        uhc_netherWorld.environment(World.Environment.NETHER);
+        uhc_netherWorld.createWorld();
         // LISTENERS
         getServer().getPluginManager().registerEvents(new listeners(this), this);
         // COMMANDS
@@ -55,9 +67,11 @@ public class Main extends JavaPlugin
     public void onDisable()
     {
         World uhc = Bukkit.getWorld("uhc");
+        World uhc_nether = Bukkit.getWorld("uhc_nether");
         World world = Bukkit.getWorld("world");
         Location spawn = new Location(world, 0, 64, 0);
         unLoadWord(uhc, spawn);
+        unLoadWord(uhc_nether, spawn);
         return;
     }
     public String getConfigString(String path)
@@ -74,13 +88,14 @@ public class Main extends JavaPlugin
     public double hub_z = getConfigDouble("world.hub.z");
     public String prefix = getConfigString("message.prefix");
     public String state = "wait";
+    public String bukkit_version = Bukkit.getBukkitVersion();
 
     public void checkWin()
     {
         Player winner = null;
         for (Player player : Bukkit.getOnlinePlayers())
         {
-            if (player.getWorld() == Bukkit.getWorld("uhc") && player.getGameMode() == GameMode.SURVIVAL)
+            if (player.getWorld() != Bukkit.getWorld("world") && player.getGameMode() == GameMode.SURVIVAL)
             {
                 winner = player;
             }

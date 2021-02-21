@@ -37,8 +37,17 @@ public class startCommand implements CommandExecutor
         border.setDamageAmount(1);
         border.setDamageBuffer(1);
         border.setWarningDistance(0);
+        World nether = Bukkit.getWorld("uhc_nether");
+        WorldBorder border_nether = nether.getWorldBorder();
+        border_nether.setCenter(0, 0);
+        border_nether.setSize(map_size/2.0);
+        border_nether.setDamageAmount(1);
+        border_nether.setDamageBuffer(1);
+        border_nether.setWarningDistance(0);
         uhc.setTime(0);
         uhc.setGameRuleValue("naturalRegeneration","false");
+        nether.setTime(0);
+        nether.setGameRuleValue("naturalRegeneration", "false");
         // RTP Players on uhc map
         Random rand = new Random();
         ItemStack sword = new ItemStack(Material.STONE_SWORD);
@@ -62,7 +71,10 @@ public class startCommand implements CommandExecutor
             player.setLevel(0);
             player.teleport(location);
             main.playerLeft++;
-            player.playSound(player.getLocation(), Sound.ZOMBIE_WOODBREAK, 10, 10);
+            if (main.bukkit_version.startsWith("1.8"))
+            {
+                player.playSound(player.getLocation(), Sound.ZOMBIE_WOODBREAK, 10, 10);
+            }
         }
         // Invincible
         main.state = "invincible";
@@ -132,7 +144,10 @@ public class startCommand implements CommandExecutor
                     Bukkit.broadcastMessage(main.prefix+"PvP activé !");
                     for(Player player : Bukkit.getOnlinePlayers())
                     {
-                        player.playSound(player.getLocation(), Sound.WITHER_DEATH, 10, 10);
+                        if (main.bukkit_version.startsWith("1.8"))
+                        {
+                            player.playSound(player.getLocation(), Sound.WITHER_DEATH, 10, 10);
+                        }
                     }
                     main.state = "pvp";
                 }
@@ -154,9 +169,13 @@ public class startCommand implements CommandExecutor
                     main.state = "border";
                     int time_to_moove = time_end_border - time_border;
                     uhc.getWorldBorder().setSize(main.getConfigInt("uhc.final_map_size"), time_to_moove);
+                    nether.getWorldBorder().setSize(main.getConfigInt("uhc.final_map_size")/2.0, time_to_moove);
                     for(Player player : Bukkit.getOnlinePlayers())
                     {
-                        player.playSound(player.getLocation(), Sound.CREEPER_HISS, 10, 10);
+                        if (main.bukkit_version.startsWith("1.8"))
+                        {
+                            player.playSound(player.getLocation(), Sound.CREEPER_HISS, 10, 10);
+                        }
                     }
                 }
                 // Border to End
@@ -176,7 +195,10 @@ public class startCommand implements CommandExecutor
                     Bukkit.broadcastMessage(main.prefix+"La border a fini de bouger !");
                     for(Player player : Bukkit.getOnlinePlayers())
                     {
-                        player.playSound(player.getLocation(), Sound.ANVIL_LAND, 10, 10);
+                        if (main.bukkit_version.startsWith("1.8"))
+                        {
+                            player.playSound(player.getLocation(), Sound.ANVIL_LAND, 10, 10);
+                        }
                     }
                     main.state = "end";
                 }

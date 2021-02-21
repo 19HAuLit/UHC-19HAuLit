@@ -1,6 +1,6 @@
 name: UHC-19hAuLit
 main: fr.gotta.uhc.Main
-version: 0.3c
+version: 0.4a
 description: Plugin de UHC by 19HAuLit
 commands:
   hub:

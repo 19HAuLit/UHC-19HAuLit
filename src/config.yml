@@ -22,9 +22,9 @@ scenario:
   # True ou False
   cutclean: true
   # Mettre un chiffre
-  xp_rate: 5
+  xp_rate: 3
   fireless: true
   nofall: false
   all_tree_drop: true
   # Mettre le pourcentage de change
-  apple_rate: 2
+  apple_rate: 3

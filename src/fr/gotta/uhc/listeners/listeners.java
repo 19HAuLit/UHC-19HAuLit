@@ -3,6 +3,7 @@ package fr.gotta.uhc.listeners;
 import fr.gotta.uhc.Main;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Cow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -13,11 +14,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,9 +43,9 @@ public class listeners implements Listener
         main.scoreBoard(player);
         World uhc = Bukkit.getWorld("uhc");
         event.setJoinMessage(main.prefix+player.getDisplayName()+" viens pour se battre !");
+        World hub = Bukkit.getWorld("world");
         if (main.state == "wait")
         {
-            World hub = Bukkit.getWorld("world");
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
             player.getActivePotionEffects().clear();
@@ -58,7 +57,7 @@ public class listeners implements Listener
             player.setExp(0);
             player.setLevel(0);
         }
-        else if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL)
+        else if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL)
         {
             main.playerLeft++;
         }
@@ -88,6 +87,22 @@ public class listeners implements Listener
     }
 
     @EventHandler
+    public void Portal(PlayerPortalEvent event)
+    {
+        Player player = event.getPlayer();
+        World nether = Bukkit.getWorld("uhc_nether");
+        World uhc = Bukkit.getWorld("uhc");
+        World world = nether;
+        if (player.getWorld() == nether) world = uhc;
+        Location location = new Location(world, player.getLocation().getBlockX()/2.0, player.getLocation().getBlockY(), player.getLocation().getBlockZ()/2.0);
+        event.useTravelAgent(true);
+        event.getPortalTravelAgent().setCanCreatePortal(true);
+        Location portalLoc = event.getPortalTravelAgent().findOrCreate(location);
+        Location loc = new Location(portalLoc.getWorld(), portalLoc.getBlockX()+0.5, portalLoc.getBlockY(), portalLoc.getBlockZ()+0.5);
+        player.teleport(loc);
+    }
+
+    @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent event)
     {
         if (event.getEntity() instanceof Player)
@@ -95,7 +110,6 @@ public class listeners implements Listener
             Entity damager = event.getDamager();
             Player player = (Player) event.getEntity();
             World hub = Bukkit.getWorld("world");
-            World uhc = Bukkit.getWorld("uhc");
             if (damager instanceof Player)
             {
                 Player killer = (Player) damager;
@@ -132,7 +146,6 @@ public class listeners implements Listener
         if (event.getEntity() instanceof Player)
         {
             Player player = (Player) event.getEntity();
-            World uhc = Bukkit.getWorld("uhc");
             World hub = Bukkit.getWorld("world");
             if (player.getWorld() == hub || main.state == "teleportation" || main.state == "invincible")
             {
@@ -158,11 +171,22 @@ public class listeners implements Listener
     }
 
     @EventHandler
+    public void onEntityDeath(EntityDeathEvent event)
+    {
+        Entity entity = event.getEntity();
+        Location location = event.getEntity().getLocation();
+        if (entity instanceof Cow)
+        {
+            //location.getWorld().dropItemNaturally(location, new ItemStack(Material.COOKED_BEEF, 1));
+        }
+    }
+
+    @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
         Player player = (Player) event.getEntity();
-        World uhc = Bukkit.getWorld("uhc");
-        if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+        World hub = Bukkit.getWorld("world");
+        if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
         {
             event.setDeathMessage(null);
             Bukkit.broadcastMessage(DeathMsg);
@@ -172,6 +196,13 @@ public class listeners implements Listener
             event.getEntity().setSaturation(20);
             main.playerLeft--;
             main.checkWin();
+            for (Player p : Bukkit.getOnlinePlayers())
+            {
+                if (main.bukkit_version.startsWith("1.8"))
+                {
+                    p.playSound(player.getLocation(), Sound.EXPLODE, 10, 10);
+                }
+            }
         }
 
     }
@@ -289,8 +320,8 @@ public class listeners implements Listener
     {
         event.setQuitMessage(main.prefix+event.getPlayer().getDisplayName()+" nous a quitté(e) lâchement...");
         Player player = event.getPlayer();
-        World uhc = Bukkit.getWorld("uhc");
-        if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+        World hub = Bukkit.getWorld("hub");
+        if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
         {
             main.playerLeft--;
             main.checkWin();

@@ -24,13 +24,12 @@ public class hubCommand implements CommandExecutor
         if (commandSender instanceof Player)
         {
             Player player = (Player) commandSender;
-            World uhc = Bukkit.getWorld("uhc");
-            if (player.getWorld() == uhc && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+            World hub = Bukkit.getWorld("world");
+            if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
             {
                 main.playerLeft--;
                 main.checkWin();
             }
-            World hub = Bukkit.getWorld("world");
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
             player.getActivePotionEffects().clear();
