@@ -8,6 +8,9 @@ Plugin UHC Bukkit 1.8.8
 - Ajouter la commande /arena
 
 ###### Ajouts par version:
+- 0.4b:
+  - Ajout de la commande /vanish
+  - Ajout de la commande /invsee
 - 0.4a:
   - Nether enfin ajouté
   - Commande /revive terminée

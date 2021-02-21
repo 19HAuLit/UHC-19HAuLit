@@ -59,7 +59,7 @@ public class reviveCommand implements CommandExecutor
                     }
                 }
             }
-            if (isRevive) commandSender.sendMessage(main.prefix+"Il est impossible de revive le joueur");
+            if (!isRevive) commandSender.sendMessage(main.prefix+"Il est impossible de revive le joueur");
         }
         else if (commandSender instanceof Player)
         {

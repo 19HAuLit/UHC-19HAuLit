@@ -22,6 +22,7 @@ public class Main extends JavaPlugin
         if (hub.getPVP()) hub.setPVP(false);
         if (hub.getAnimalSpawnLimit() != 0) hub.setAnimalSpawnLimit(0);
         if (hub.getMonsterSpawnLimit() != 0) hub.setMonsterSpawnLimit(0);
+        hub.setGameRuleValue("doFireTick", "false");
         // Load World
         if (getConfigBool("world.gen_start"))
         {
@@ -55,6 +56,8 @@ public class Main extends JavaPlugin
         getCommand("state").setExecutor(new stateCommand(this));
         getCommand("spectator").setExecutor(new spectatorCommand(this));
         getCommand("revive").setExecutor(new reviveCommand(this));
+        getCommand("invsee").setExecutor(new invseeCommand(this));
+        getCommand("vanish").setExecutor(new vanishCommand(this));
         // ScoreBoard
         for(Player player : Bukkit.getOnlinePlayers())
         {
