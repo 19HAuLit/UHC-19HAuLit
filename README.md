@@ -10,7 +10,7 @@ Plugin UHC Bukkit 1.8.8
 ###### Ajouts par version:
 - 0.4c:
   - Clear effect opérationnel
-  - Ajout de l'arèna
+  - Ajout de l'arena
 - 0.4b:
   - Ajout de la commande /vanish
   - Ajout de la commande /invsee
