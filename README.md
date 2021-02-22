@@ -8,6 +8,9 @@ Plugin UHC Bukkit 1.8.8
 - Ajouter la commande /arena
 
 ###### Ajouts par version:
+- 0.4c:
+  - Clear effect opérationnel
+  - Ajout de l'arèna
 - 0.4b:
   - Ajout de la commande /vanish
   - Ajout de la commande /invsee
@@ -19,7 +22,7 @@ Plugin UHC Bukkit 1.8.8
   - Sons lors des différents évènements
   - Correction du message de mort qui se mettait après le message de win
   - Correction du ScoreBoard
-  - MODT Custom
+  - MOTD Custom
 - 0.3b:
   - ScoreBoard
 - 0.3a:

@@ -48,9 +48,9 @@ public class listeners implements Listener
         {
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
-            player.getActivePotionEffects().clear();
+            main.clearEffect(player);
             player.teleport(spawn);
-            player.getInventory().clear();
+            main.clearStuff(player);
             player.setSaturation(20);
             player.setFoodLevel(20);
             player.setHealth(20);
@@ -184,12 +184,18 @@ public class listeners implements Listener
     @EventHandler
     public void onDeath(PlayerDeathEvent event)
     {
-        Player player = (Player) event.getEntity();
+        Player player = event.getEntity();
         World hub = Bukkit.getWorld("world");
-        if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+
+        main.clearStuff(player);
+        Location location = player.getLocation();
+        ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 1);
+        location.getWorld().dropItemNaturally(location, gapple);
+        event.setDeathMessage(null);
+        Bukkit.broadcastMessage(DeathMsg);
+
+        if (player.getWorld() != hub && player.getWorld() != Bukkit.getWorld("arena") && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
         {
-            event.setDeathMessage(null);
-            Bukkit.broadcastMessage(DeathMsg);
             event.getEntity().setGameMode(GameMode.SPECTATOR);
             event.getEntity().setHealth(20);
             event.getEntity().setFoodLevel(20);
@@ -200,7 +206,7 @@ public class listeners implements Listener
             {
                 if (main.bukkit_version.startsWith("1.8"))
                 {
-                    p.playSound(player.getLocation(), Sound.EXPLODE, 10, 10);
+                    p.playSound(location, Sound.EXPLODE, 10, 10);
                 }
             }
         }
@@ -243,6 +249,7 @@ public class listeners implements Listener
     public void onBreak(BlockBreakEvent event)
     {
         World hub = Bukkit.getWorld("world");
+        World arena = Bukkit.getWorld("arena");
         Block block = event.getBlock();
         Location location = block.getLocation();
         Player player = event.getPlayer();
@@ -252,6 +259,19 @@ public class listeners implements Listener
             {
                 event.setCancelled(true);
                 player.sendMessage(main.prefix+"Vous ne pouvez pas casser ce block !");
+            }
+            else if (player.getWorld() == arena)
+            {
+                if (block.getType() != Material.WOOD)
+                {
+                    event.setCancelled(true);
+                    player.sendMessage(main.prefix+"Vous ne pouvez pas casser ce block !");
+                }
+                else
+                {
+                    event.setCancelled(true);
+                    block.setType(Material.AIR);
+                }
             }
             if (main.getConfigBool("scenario.cutclean") && player.getWorld() != hub && main.state != "teleportation")
             {
@@ -301,10 +321,38 @@ public class listeners implements Listener
     {
         Player player = event.getPlayer();
         World hub = Bukkit.getWorld("world");
-        if (player.getGameMode() == GameMode.SURVIVAL && player.getWorld() == hub)
+        World arena = Bukkit.getWorld("arena");
+        Block block = event.getBlock();
+        if (player.getGameMode() == GameMode.SURVIVAL)
         {
-            event.setCancelled(true);
-            player.sendMessage(main.prefix+"Vous ne pouvez pas posser ce block !");
+            if (player.getWorld() == hub)
+            {
+                event.setCancelled(true);
+                player.sendMessage(main.prefix + "Vous ne pouvez pas posser ce block !");
+            }
+            else if (player.getWorld() == arena)
+            {
+                if (block.getType() == Material.WOOD)
+                {
+                    main.getServer().getScheduler().runTaskTimer(main, new Runnable()
+                    {
+                        int time = 0;
+                        @Override
+                        public void run()
+                        {
+                            if (time == 0) player.getInventory().addItem(new ItemStack(Material.WOOD, 1));
+                            if (time == 15) block.setType(Material.AIR);
+                            time++;
+                            return;
+                        }
+                    },0, 20);
+                }
+                else
+                {
+                    event.setCancelled(true);
+                    player.sendMessage(main.prefix + "Vous ne pouvez pas posser ce block !");
+                }
+            }
         }
         return;
     }
@@ -312,7 +360,7 @@ public class listeners implements Listener
     @EventHandler
     public void Server(ServerListPingEvent event)
     {
-        event.setMotd(main.getConfigString("server.modt"));
+        event.setMotd(main.getConfigString("server.motd"));
     }
 
     @EventHandler
@@ -321,7 +369,15 @@ public class listeners implements Listener
         event.setQuitMessage(main.prefix+event.getPlayer().getDisplayName()+" nous a quitté(e) lâchement...");
         Player player = event.getPlayer();
         World hub = Bukkit.getWorld("hub");
-        if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+        if (player.getWorld() == Bukkit.getWorld("arena"))
+        {
+            main.clearStuff(player);
+            Location location = player.getLocation();
+            ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 1);
+            location.getWorld().dropItemNaturally(location, gapple);
+
+        }
+        else if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
         {
             main.playerLeft--;
             main.checkWin();

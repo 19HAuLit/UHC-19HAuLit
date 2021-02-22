@@ -61,12 +61,12 @@ public class startCommand implements CommandExecutor
             int z = map_size/2-rand.nextInt(map_size);
             Location location = new Location(uhc,x, 256, z);
             player.setGameMode(GameMode.SURVIVAL);
-            player.getInventory().clear();
+            main.clearStuff(player);
             player.getInventory().addItem(sword, pickaxe, axe, food, book);
             player.setFoodLevel(20);
             player.setSaturation(20);
             player.setHealth(20);
-            player.getActivePotionEffects().clear();
+            main.clearEffect(player);
             player.setExp(0);
             player.setLevel(0);
             player.teleport(location);

@@ -30,7 +30,7 @@ public class reviveCommand implements CommandExecutor
         player.setFoodLevel(20);
         player.setSaturation(20);
         player.setHealth(20);
-        player.getActivePotionEffects().clear();
+        main.clearEffect(player);
         player.teleport(location);
         Bukkit.broadcastMessage(main.prefix + player.getDisplayName() + " viens d'être revive !");
         main.playerLeft++;

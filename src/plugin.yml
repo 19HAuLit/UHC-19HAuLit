@@ -1,6 +1,6 @@
 name: UHC-19hAuLit
 main: fr.gotta.uhc.Main
-version: 0.4b
+version: 0.4c
 description: Plugin de UHC by 19HAuLit
 commands:
   hub:
@@ -34,6 +34,9 @@ commands:
   meetup:
     description: Commande pour lance un Meetup
     permission: host.use
+  arena:
+    description: Commande pour rejoindre l'arèna
+    permission: player.use
   invsee:
     description: Commande pour voir l'inventaire des joueurs
     permission: player.use

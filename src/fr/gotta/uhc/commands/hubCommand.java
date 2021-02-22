@@ -1,14 +1,12 @@
 package fr.gotta.uhc.commands;
 
 import fr.gotta.uhc.Main;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class hubCommand implements CommandExecutor
 {
@@ -25,18 +23,25 @@ public class hubCommand implements CommandExecutor
         {
             Player player = (Player) commandSender;
             World hub = Bukkit.getWorld("world");
-            if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
+            World arena = Bukkit.getWorld("arena");
+            if (player.getWorld() == arena)
+            {
+                Location location = player.getLocation();
+                ItemStack gapple = new ItemStack(Material.GOLDEN_APPLE, 1);
+                location.getWorld().dropItemNaturally(location, gapple);
+            }
+            else if (player.getWorld() != hub && player.getGameMode() == GameMode.SURVIVAL && main.state != "wait")
             {
                 main.playerLeft--;
                 main.checkWin();
             }
             Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
             player.setGameMode(GameMode.SURVIVAL);
-            player.getActivePotionEffects().clear();
+            main.clearEffect(player);
             player.teleport(spawn);
             player.setExp(0);
             player.setLevel(0);
-            player.getInventory().clear();
+            main.clearStuff(player);
             player.sendMessage(main.prefix+"Bienvenue au spawn !");
         }
 

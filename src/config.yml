@@ -1,5 +1,5 @@
 server:
-  modt: "&5[&2UHC&3-&419hAuLit&5]&7 1.8 -> 1.16\n&8Discord GottaGras Gaming: &6https://discord.gg/yeBv85Mt5z"
+  motd: "&5[&2UHC&3-&419hAuLit&5]&7 1.8 -> 1.8.9\n&8Discord GottaGras Gaming: &6https://discord.gg/yeBv85Mt5z"
 world:
   #True: La map uhc est regenere | False: La map uhc n'est pas regenere
   gen_start: false

@@ -4,11 +4,15 @@ import fr.gotta.uhc.commands.*;
 import fr.gotta.uhc.listeners.listeners;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Collection;
 
 public class Main extends JavaPlugin
 {
@@ -45,6 +49,14 @@ public class Main extends JavaPlugin
         WorldCreator uhc_netherWorld = new WorldCreator("uhc_nether");
         uhc_netherWorld.environment(World.Environment.NETHER);
         uhc_netherWorld.createWorld();
+        WorldCreator arena = new WorldCreator("arena");
+        arena.environment(World.Environment.NORMAL);
+        arena.createWorld();
+        Bukkit.getWorld("arena").getWorldBorder().setSize(200);
+        Bukkit.getWorld("arena").setGameRuleValue("naturalRegeneration", "false");
+        Bukkit.getWorld("arena").setGameRuleValue("keepInventory", "true");
+        if (Bukkit.getWorld("arena").getAnimalSpawnLimit() != 0) Bukkit.getWorld("arena").setAnimalSpawnLimit(0);
+        if (Bukkit.getWorld("arena").getMonsterSpawnLimit() != 0) Bukkit.getWorld("arena").setMonsterSpawnLimit(0);
         // LISTENERS
         getServer().getPluginManager().registerEvents(new listeners(this), this);
         // COMMANDS
@@ -58,6 +70,7 @@ public class Main extends JavaPlugin
         getCommand("revive").setExecutor(new reviveCommand(this));
         getCommand("invsee").setExecutor(new invseeCommand(this));
         getCommand("vanish").setExecutor(new vanishCommand(this));
+        getCommand("arena").setExecutor(new arenaCommand(this));
         // ScoreBoard
         for(Player player : Bukkit.getOnlinePlayers())
         {
@@ -71,10 +84,12 @@ public class Main extends JavaPlugin
     {
         World uhc = Bukkit.getWorld("uhc");
         World uhc_nether = Bukkit.getWorld("uhc_nether");
+        World arena = Bukkit.getWorld("arena");
         World world = Bukkit.getWorld("world");
         Location spawn = new Location(world, 0, 64, 0);
         unLoadWord(uhc, spawn);
         unLoadWord(uhc_nether, spawn);
+        unLoadWord(arena, spawn);
         return;
     }
     public String getConfigString(String path)
@@ -111,6 +126,26 @@ public class Main extends JavaPlugin
                 player.playSound(player.getLocation(), Sound.ENDERDRAGON_DEATH, 10, 10);
             }
         }
+    }
+
+    public void clearEffect(Player player)
+    {
+        Collection<PotionEffect> effect = player.getActivePotionEffects();
+        for (PotionEffect potionEffect : effect)
+        {
+            PotionEffectType potionType = potionEffect.getType();
+            player.removePotionEffect(potionType);
+        }
+    }
+
+    public void clearStuff(Player player)
+    {
+        player.getInventory().clear();
+        ItemStack air = new ItemStack(Material.AIR);
+        player.getInventory().setHelmet(air);
+        player.getInventory().setChestplate(air);
+        player.getInventory().setLeggings(air);
+        player.getInventory().setBoots(air);
     }
 
     public void scoreBoard(Player player)
