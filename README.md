@@ -5,7 +5,6 @@ Plugin UHC Bukkit 1.8.8
 - Ajouter le cutclean aux mobs (En cours)
 - Modifier le taux d'apparition de la Canne à Sucre
 - Ajouter la commande /meetup
-- Ajouter la commande /arena
 
 ###### Ajouts par version:
 - 0.4c:
