@@ -28,21 +28,6 @@ public class Main extends JavaPlugin
         if (hub.getMonsterSpawnLimit() != 0) hub.setMonsterSpawnLimit(0);
         hub.setGameRuleValue("doFireTick", "false");
         // Load World
-        if (getConfigBool("world.gen_start"))
-        {
-            // Tp world
-            Location spawn = new Location(hub, hub_x, hub_y, hub_z);
-            // Regen uhc
-            World uhc = Bukkit.getWorld("uhc");
-            unLoadWord(uhc, spawn);
-            File uhcFile = new File(System.getProperty("user.dir") + "\\uhc");
-            fileDelete(uhcFile);
-            // Regen uhc_nether
-            World uhc_nether = Bukkit.getWorld("uhc_nether");
-            unLoadWord(uhc_nether, spawn);
-            File uhc_netherFile = new File(System.getProperty("user.dir") + "\\uhc_nether");
-            fileDelete(uhc_netherFile);
-        }
         WorldCreator uhcWorld = new WorldCreator("uhc");
         uhcWorld.environment(World.Environment.NORMAL);
         uhcWorld.createWorld();
@@ -248,8 +233,11 @@ public class Main extends JavaPlugin
             if (player.getWorld() == world)
             {
                 player.setGameMode(GameMode.SURVIVAL);
-                player.getInventory().clear();
-                player.getActivePotionEffects().clear();
+                clearEffect(player);
+                clearStuff(player);
+                player.setHealth(20);
+                player.setSaturation(20);
+                player.setFoodLevel(20);
                 player.teleport(location);
                 player.sendMessage(prefix+"Vous venez d'être téléporter au hub car la map où vous étiez a été fermée");
             }

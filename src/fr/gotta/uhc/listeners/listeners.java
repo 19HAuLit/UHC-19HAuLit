@@ -210,6 +210,18 @@ public class listeners implements Listener
                 }
             }
         }
+        else if (player.getWorld() == Bukkit.getWorld("arena"))
+        {
+            Location spawn = new Location(hub, main.hub_x, main.hub_y, main.hub_z);
+            main.clearStuff(player);
+            main.clearEffect(player);
+            player.setFoodLevel(20);
+            player.setHealth(20);
+            player.setSaturation(20);
+            location.getWorld().dropItemNaturally(location, gapple);
+            player.setGameMode(GameMode.SURVIVAL);
+            player.teleport(spawn);
+        }
 
     }
 
@@ -358,7 +370,7 @@ public class listeners implements Listener
     }
 
     @EventHandler
-    public void Server(ServerListPingEvent event)
+    public void onPing(ServerListPingEvent event)
     {
         event.setMotd(main.getConfigString("server.motd"));
     }

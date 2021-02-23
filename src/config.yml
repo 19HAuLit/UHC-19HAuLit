@@ -1,16 +1,17 @@
 server:
   motd: "&5[&2UHC&3-&419hAuLit&5]&7 1.8 -> 1.8.9\n&8Discord GottaGras Gaming: &6https://discord.gg/yeBv85Mt5z"
 world:
-  #True: La map uhc est regenere | False: La map uhc n'est pas regenere
-  gen_start: false
   hub:
-    x: -0.5
-    y: 33
-    z: -18.5
+    x: 0.5
+    y: 121
+    z: 0.5
 message:
   prefix: "&5[&2UHC&3-&419hAuLit&5]&7 "
 uhc:
   # Tout les temps suivants sont en secondes
+  auto_border: true
+  auto_border_size: 200
+  auto_border_limit: 2000
   map_size: 1500
   final_map_size: 100
   time_invincible: 30

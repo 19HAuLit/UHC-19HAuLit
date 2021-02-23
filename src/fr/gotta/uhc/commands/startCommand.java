@@ -29,7 +29,19 @@ public class startCommand implements CommandExecutor
         main.state = "teleportation";
         Bukkit.broadcastMessage(main.prefix+"Téléportation des joueurs");
         // BORDER SET
-        int map_size = main.getConfigInt("uhc.map_size");
+        int map_size = 0;
+        if (main.getConfigBool("uhc.auto_border"))
+        {
+            for(Player player : Bukkit.getOnlinePlayers())
+            {
+                map_size += main.getConfigInt("uhc.auto_border_size");
+            }
+            if (map_size > main.getConfigInt("uhc.auto_border_limit")) map_size = main.getConfigInt("uhc.auto_border_limit");
+        }
+        else
+        {
+            map_size = main.getConfigInt("uhc.map_size");
+        }
         World uhc = Bukkit.getWorld("uhc");
         WorldBorder border = uhc.getWorldBorder();
         border.setCenter(0, 0);
